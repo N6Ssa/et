@@ -1,0 +1,13 @@
+{
+  "name": "et-ctf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Сайт ЭТ CTF: форматы спонсорства и демонстрационная форма заявки",
+  "scripts": {
+    "build": "node scripts/build-pages.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

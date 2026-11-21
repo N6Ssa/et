@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+const html=await fs.readFile('public/index.html','utf8');
+const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+assert.equal(new Set(ids).size,ids.length,'Duplicate IDs');
+for(const m of html.matchAll(/href="#([^"]+)"/g))assert(ids.includes(m[1]),'Missing target '+m[1]);
+for(const m of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g))await fs.access('public/'+m[1].slice(2));
+for(const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
+for(const file of ['application.js','reveal.js'])new vm.Script(await fs.readFile('public/'+file,'utf8'));
+assert(!(await fs.readFile('public/application.js','utf8')).includes('fetch('),'Demo must not send data');
+assert(html.includes('Данные никуда не отправляются.'));
+for(const price of ['3 млн ₽','1,4 млн ₽','0,8 млн ₽','0,5 млн ₽'])assert(html.includes(price));
+assert.equal((await fs.readFile('public/fonts/AKONY-Bold.otf')).toString('ascii',0,4),'OTTO');
+console.log('Passed: navigation, assets, scripts, demo form, packages, font');

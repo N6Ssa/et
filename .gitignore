@@ -1,0 +1,8 @@
+redline/
+redline-deploy.tar.gz
+build/
+node_modules/
+.openai/
+.env
+.env.*
+!.env.example
